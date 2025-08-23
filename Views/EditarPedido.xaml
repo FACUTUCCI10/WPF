@@ -1,0 +1,64 @@
+﻿<Window x:Class="primer_wpf.Views.EditarPedido"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:primer_wpf"
+        mc:Ignorable="d"
+        Title="Editar pedido registrado" Height="335" Width="300">
+
+    <Grid Margin="10,10,10,11">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- ID Pedido -->
+            <RowDefinition Height="Auto"/>
+            <!-- Código Cliente -->
+            <RowDefinition Height="Auto"/>
+            <!-- Fecha Pedido -->
+            <RowDefinition Height="Auto"/>
+            <!-- Forma de Pago -->
+            <RowDefinition Height="Auto"/>
+            <!-- Botones -->
+        </Grid.RowDefinitions>
+
+        <!-- ID del Pedido -->
+        <!--<StackPanel Orientation="Vertical" Grid.Row="0" Margin="0,5">
+            <Label Content="ID del Pedido" FontStyle="Italic" FontSize="12" FontWeight="Bold"/>
+            <TextBox Name="txt_id_pedido" Width="150" Height="22"/>
+        </StackPanel>-->
+
+        <!-- Código Cliente -->
+        <StackPanel Orientation="Vertical" Grid.Row="1" Margin="0,5">
+            <Label Content="Código Cliente" FontStyle="Italic" FontSize="12" FontWeight="Bold"/>
+            <TextBox Name="txt_cod_cliente" Width="150" Height="22"/>
+        </StackPanel>
+
+        <!-- Fecha de Pedido -->
+        <StackPanel Orientation="Vertical" Grid.Row="2" Margin="0,5">
+            <Label Content="Fecha de Pedido" FontStyle="Italic" FontSize="12" FontWeight="Bold"/>
+            <DatePicker Name="dp_fecha_pedido_edit" Width="150" Height="24"/>
+        </StackPanel>
+
+        <!-- Forma de Pago -->
+        <StackPanel Orientation="Vertical" Grid.Row="3" Margin="0,5">
+            <Label Content="Forma de Pago" FontStyle="Italic" FontSize="12" FontWeight="Bold"/>
+            <ComboBox Name="cb_forma_pago_edit" Width="150" Height="24">
+                <ComboBoxItem Content="Efectivo"/>
+                <ComboBoxItem Content="Tarjeta"/>
+                <ComboBoxItem Content="Transferencia"/>
+            </ComboBox>
+        </StackPanel>
+
+        <!-- Botones -->
+        <StackPanel Orientation="Horizontal" Grid.Row="4" Margin="0,15" HorizontalAlignment="Center" >
+            <Button Name="btn_aceptar_edicion" Content="Aceptar Edición"
+                    FontWeight="Bold" Background="MediumAquamarine"
+                    Width="120" Height="30" Margin="5"
+                    Click="btn_aceptar_edicion_Click"/>
+            <Button Name="btn_cancelar_edicion" Content="Cancelar Edición"
+                    FontWeight="Bold" Background="PaleVioletRed"
+                    Width="120" Height="30" Margin="5"
+                    Click="btn_cancelar_edicion_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

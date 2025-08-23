@@ -1,0 +1,136 @@
+﻿<Window x:Class="primer_wpf.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="PRIMERA INTERFAZ"
+        Height="662" Width="1306" Background="Aquamarine" Activated="Window_Activated">
+
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="774*"/>
+            <ColumnDefinition Width="233*"/>
+            <ColumnDefinition Width="99*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Sección Clientes -->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Label Content="Clientes"
+                   FontSize="17"
+                   Margin="5"
+                   FontStyle="Italic"
+                   FontWeight="Bold"/>
+
+            <DataGrid Name="dataGridClientes"
+                      Grid.Row="1"
+                      Margin="10"
+                      AutoGenerateColumns="False"
+                      SelectionMode="Single"
+                      SelectionUnit="FullRow"                      
+                      SelectionChanged="dataGridClientes_SelectionChanged"
+                      MouseDoubleClick="dataGridClientes_MouseDoubleClick">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="25"/>
+                    <DataGridTextColumn Header="Nombre" Binding="{Binding nombre}" Width="*"/>
+                    <DataGridTextColumn Header="Apellido" Binding="{Binding apellido}" Width="*"/>
+                    <DataGridTextColumn Header="Email" Binding="{Binding poblacion}" Width="*"/>
+                    <DataGridTextColumn Header="Teléfono" Binding="{Binding telefono}" Width="*"/>
+                    <DataGridTextColumn Header="Dirección" Binding="{Binding direccion}" Width="*"/>
+                    <DataGridTextColumn Header="Código cliente" Binding="{Binding cod_cliente}" Width="88"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <StackPanel Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Margin="5">
+                <Button Name="btn_InsertarCliente"
+                        Content="Insertar Cliente"
+                        Width="150" Height="40"
+                        Margin="5"
+                        Click="btn_InsertarCliente_Click"/>
+                <Button Name="btn_Eliminar_cliente"
+                        Content="Eliminar Cliente"
+                        Width="150" Height="40"
+                        Margin="5"
+                        Click="btn_Eliminar_cliente_Click"/>
+                <Button Name="btnReactivarCliente"
+                    Content="Reactivar Cliente"
+                    Width="150" Height="40"
+                    Margin="5"
+                    Click="btnReactivarCliente_Click"/>
+
+                <Button Name="btn_EditarCliente"
+                        Content="Editar Cliente"
+                        Width="150" Height="40"
+                        Margin="5"
+                        Click="btn_EditarCliente_Click"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Sección Pedidos -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Label Content="Pedidos"
+                   FontSize="17"
+                   FontWeight="Bold"
+                   FontStyle="Italic"
+                   Margin="5"/>
+
+            <Grid Grid.Row="1" Margin="0,0,-101,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <DataGrid Name="dataGridPedidos"
+                          Grid.Column="0"
+                          Margin="10"
+                          AutoGenerateColumns="False"
+                          SelectionMode="Single"
+                          SelectionUnit="FullRow"
+                          SelectionChanged="dataGridPedidos_SelectionChanged">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="18"/>
+                        <DataGridTextColumn Header="Forma de Pago" Binding="{Binding forma_pago}" Width="*"/>
+                        <DataGridTextColumn Header="Fecha" Binding="{Binding fecha_pedido}" Width="*"/>
+                        <!-- Agregá más columnas si tu modelo lo requiere -->
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <StackPanel Orientation="Vertical"
+                            Margin="0,5,5,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Width="109" Grid.Column="1">
+                    <Button x:Name="btn_Insertar_pedido"
+                            Content="Insertar Pedido"
+                            Width="94" Height="40"
+                            Margin="5"
+                            Click="btn_Insertar_pedido_Click"/>
+                    <Button x:Name="btn_borrarPedido"
+                            Content="Eliminar Pedido"
+                            Width="93" Height="40"
+                            Click="btn_borrarPedido_Click"/>
+                    <Button x:Name="btn_EditarPedido"
+                            Content="Editar Pedido"
+                            Width="95" Height="40"
+                            Margin="5"
+                            Click="btn_EditarPedido_Click"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

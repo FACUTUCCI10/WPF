@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primer_wpf", "primer_wpf.csproj", "{5670419A-F9E4-467F-84EE-5D0410DF0CAC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5670419A-F9E4-467F-84EE-5D0410DF0CAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5670419A-F9E4-467F-84EE-5D0410DF0CAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5670419A-F9E4-467F-84EE-5D0410DF0CAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5670419A-F9E4-467F-84EE-5D0410DF0CAC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B8B728EB-1F36-4430-8F43-2C415995D885}
+	EndGlobalSection
+EndGlobal

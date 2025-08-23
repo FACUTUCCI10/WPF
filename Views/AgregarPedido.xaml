@@ -1,0 +1,57 @@
+﻿<Window x:Class="primer_wpf.Views.AgregarPedido"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:primer_wpf"
+        mc:Ignorable="d"
+        Title="Agregar Pedido" Height="300" Width="350">
+    <Grid Margin="10">
+
+        <!-- Código Cliente -->
+        <Label Content="Código Cliente" 
+               FontStyle="Italic" FontSize="12" FontWeight="Bold" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" 
+               Margin="0,0,0,0"/>
+        <TextBox Name="txt_cod_cliente" 
+                 HorizontalAlignment="Left" Width="150" 
+                 Margin="0,25,0,0" VerticalAlignment="Top"/>
+
+        <!-- Fecha de Pedido -->
+        <Label Content="Fecha de Pedido" 
+               FontStyle="Italic" FontSize="12" FontWeight="Bold" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" 
+               Margin="0,65,0,0"/>
+        <DatePicker Name="dp_fecha_pedido" 
+                    HorizontalAlignment="Left" Width="150" 
+                    Margin="0,90,0,0" VerticalAlignment="Top"/>
+
+        <!-- Forma de Pago -->
+        <Label Content="Forma de Pago" 
+               FontStyle="Italic" FontSize="12" FontWeight="Bold" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" 
+               Margin="0,130,0,0"/>
+        <ComboBox Name="cb_forma_pago" 
+                  HorizontalAlignment="Left" Width="150" 
+                  Margin="0,155,0,0" VerticalAlignment="Top">
+            <ComboBoxItem Content="Efectivo"/>
+            <ComboBoxItem Content="Tarjeta"/>
+            <ComboBoxItem Content="Transferencia"/>
+        </ComboBox>
+
+        <!-- Botones -->
+        <Button Name="btn_aceptar" Content="Aceptar" 
+                FontWeight="Bold" Background="MediumAquamarine" 
+                HorizontalAlignment="Left" Width="108" Height="28" 
+                Margin="0,210,0,0" VerticalAlignment="Top" 
+                Click="btn_aceptar_Click"/>
+
+        <Button Name="btn_cancelar" Content="Cancelar" 
+                FontWeight="Bold" Background="PaleVioletRed" 
+                HorizontalAlignment="Left" Width="108" Height="28" 
+                Margin="120,210,0,0" VerticalAlignment="Top" 
+                Click="btn_cancelar_Click"/>
+
+    </Grid>
+</Window>
+
