@@ -33,5 +33,16 @@ namespace primer_wpf.Properties {
                 return ((string)(this["GestionConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=DESKTOP-C9DPJT4\\SQLEXPRESS;Initial Catalog=Gestion;Integrated Securit" +
+            "y=True;Encrypt=True;TrustServerCertificate=True")]
+        public string GestionConnectionString1 {
+            get {
+                return ((string)(this["GestionConnectionString1"]));
+            }
+        }
     }
 }

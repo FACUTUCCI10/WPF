@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="LinqClass">
+  <DataContextMoniker Name="/LinqClassDataContext" />
+  <nestedChildShapes>
+    <classShape Id="66e7c39e-0df5-445c-9b81-9ee2eb5ffc78" absoluteBounds="7.375, 0.75, 2, 1.9631982421875">
+      <DataClassMoniker Name="/LinqClassDataContext/articulo" />
+      <nestedChildShapes>
+        <elementListCompartment Id="70a56c37-222c-429a-9822-b24cf5281f79" absoluteBounds="7.3900000000000006, 1.21, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="ae53c688-4592-4fad-b289-d8591dfe29c8" absoluteBounds="3.75, 0.875, 2.25, 1.7708968098958331">
+      <DataClassMoniker Name="/LinqClassDataContext/Pedido" />
+      <nestedChildShapes>
+        <elementListCompartment Id="2ac7f716-4d09-4aa5-b11e-f4fd76c37e0b" absoluteBounds="3.7650000000000006, 1.335, 2.2199999999999998, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="05612d6b-dc7e-4c4d-82c0-7cec79a75ae9" absoluteBounds="0.875, 0.5, 2, 2.3478011067708335">
+      <DataClassMoniker Name="/LinqClassDataContext/Cliente" />
+      <nestedChildShapes>
+        <elementListCompartment Id="168e002d-b183-4870-92d9-396705cd46af" absoluteBounds="0.89000000000000012, 0.96, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(2.875 : 1.76044840494792); (3.75 : 1.76044840494792)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/LinqClassDataContext/Cliente/Cliente_Pedido" />
+      <nodes>
+        <classShapeMoniker Id="05612d6b-dc7e-4c4d-82c0-7cec79a75ae9" />
+        <classShapeMoniker Id="ae53c688-4592-4fad-b289-d8591dfe29c8" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

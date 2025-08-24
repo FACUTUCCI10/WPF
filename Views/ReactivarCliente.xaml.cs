@@ -41,6 +41,7 @@ namespace primer_wpf.Views
                 SqlCommand comando = new SqlCommand(consulta, conexionSql);
                
                 comando.Parameters.AddWithValue("@id", dataGridClientesInactivos.SelectedValue);
+                
                 conexionSql.Open();
                 
                 comando.ExecuteNonQuery();
@@ -49,13 +50,11 @@ namespace primer_wpf.Views
                
                 
                 MessageBox.Show("Cliente reactivado correctamente.");
-               
                 
-                
-                this.Close();
-                
+                this.Close();                
                
             }
+            
             catch (Exception ex)
             {
                 MessageBox.Show("Error al reactivar el cliente: " + ex.Message);

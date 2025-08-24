@@ -60,7 +60,7 @@
                         Margin="5"
                         Click="btn_InsertarCliente_Click"/>
                 <Button Name="btn_Eliminar_cliente"
-                        Content="Eliminar Cliente"
+                        Content="Desactivar Cliente"
                         Width="150" Height="40"
                         Margin="5"
                         Click="btn_Eliminar_cliente_Click"/>
