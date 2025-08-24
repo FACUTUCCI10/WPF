@@ -36,11 +36,11 @@ namespace primer_wpf.Views
         {
             try
             {
-                string consulta = "UPDATE Cliente SET Activo = 1 WHERE cod_cliente = @codCliente";
+                string consulta = "UPDATE Cliente SET Activo = 1 WHERE Id = @id";
                 
                 SqlCommand comando = new SqlCommand(consulta, conexionSql);
                
-                comando.Parameters.AddWithValue("@codCliente", dataGridClientesInactivos.SelectedValue);
+                comando.Parameters.AddWithValue("@id", dataGridClientesInactivos.SelectedValue);
                 conexionSql.Open();
                 
                 comando.ExecuteNonQuery();
@@ -49,6 +49,9 @@ namespace primer_wpf.Views
                
                 
                 MessageBox.Show("Cliente reactivado correctamente.");
+               
+                
+                
                 this.Close();
                 
                
