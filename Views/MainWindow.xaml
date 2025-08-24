@@ -32,6 +32,8 @@
             <DataGrid Name="dataGridClientes"
                       Grid.Row="1"
                       Margin="10"
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
                       AutoGenerateColumns="False"
                       SelectionMode="Single"
                       SelectionUnit="FullRow"                      
@@ -58,7 +60,7 @@
                         Margin="5"
                         Click="btn_InsertarCliente_Click"/>
                 <Button Name="btn_Eliminar_cliente"
-                        Content="Eliminar Cliente"
+                        Content="Desactivar Cliente"
                         Width="150" Height="40"
                         Margin="5"
                         Click="btn_Eliminar_cliente_Click"/>
@@ -98,6 +100,8 @@
                 <DataGrid Name="dataGridPedidos"
                           Grid.Column="0"
                           Margin="10"
+                           IsReadOnly="True"
+                           CanUserAddRows="False"
                           AutoGenerateColumns="False"
                           SelectionMode="Single"
                           SelectionUnit="FullRow"
