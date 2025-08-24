@@ -47,7 +47,7 @@ namespace primer_wpf.Views
         {
             try
             {
-                string consulta = "SELECT *, CONCAT(NOMBRE, ' ', APELLIDO, ' - ', POBLACION, ' - ', TELEFONO,' - ',DIRECCION,' - ',COD_CLIENTE) AS DescripcionCompleta FROM Cliente";
+                string consulta = "SELECT *, CONCAT(NOMBRE, ' ', APELLIDO, ' - ', POBLACION, ' - ', TELEFONO,' - ',DIRECCION,' - ',COD_CLIENTE) AS DescripcionCompleta FROM Cliente where Activo = 1";
 
                 SqlDataAdapter adaptador = new SqlDataAdapter(consulta, conexionSql);
 
@@ -127,17 +127,42 @@ namespace primer_wpf.Views
 
         private void lista_clientes_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            //MessageBox.Show("Cliente seleccionado: " + lista_clientes.SelectedValue.ToString());
-            //MostrarPedidos((int)lista_clientes.SelectedValue);
             MostrarPedidos();
         }
 
+        //private void btn_Eliminar_cliente_Click(object sender, RoutedEventArgs e)
+        //{
+        //    try
+        //    {
+               
+        //       string consulta = "DELETE FROM Cliente WHERE Id = @clienteid";
+
+        //        SqlCommand comando = new SqlCommand(consulta, conexionSql);
+
+
+        //        conexionSql.Open();
+
+        //        comando.Parameters.AddWithValue("@clienteid", dataGridClientes.SelectedValue);
+
+        //        comando.ExecuteNonQuery();
+
+        //        conexionSql.Close();
+
+        //        MessageBox.Show("Cliente eliminado correctamente.");
+               
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("Seleccione el Cliente que desea eliminar!");
+        //    }
+        //}
         private void btn_Eliminar_cliente_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-               
-               string consulta = "DELETE FROM Cliente WHERE Id = @clienteid";
+
+                string consulta = "UPDATE Cliente SET ACTIVO = 0 WHERE Id = @clienteid";
 
                 SqlCommand comando = new SqlCommand(consulta, conexionSql);
 
@@ -151,62 +176,16 @@ namespace primer_wpf.Views
                 conexionSql.Close();
 
                 MessageBox.Show("Cliente eliminado correctamente.");
-               
+
             }
 
             catch (Exception ex)
             {
                 MessageBox.Show("Seleccione el Cliente que desea eliminar!");
             }
-
-          //  MostrarClientes();
-
         }
 
-        //  private void btn_borrarPedido_Click(object sender, RoutedEventArgs e)
-        //  {
 
-        //      try
-        //      {
-        //          if (pedidos_cliente.SelectedValue == null)
-        //          {
-        //              MessageBox.Show("Seleccione el pedido que desea eliminar!");
-        //              return;
-        //          }
-
-        //          MessageBoxResult result = MessageBox.Show(
-        //          "¿Está seguro que desea eliminar este pedido?",
-        //          "Confirmación",
-        //           MessageBoxButton.YesNo,
-        //           MessageBoxImage.Warning
-        //);
-        //          if (result == MessageBoxResult.No)
-        //          {
-        //              return; // Si el usuario no confirma, no se hace nada
-        //          }
-        //          else
-        //          {
-        //              string consulta = "DELETE FROM pedido WHERE Id = @Pedidoid";
-
-        //              SqlCommand comando = new SqlCommand(consulta, conexionSql);
-        //              conexionSql.Open();
-
-        //              comando.Parameters.AddWithValue("@Pedidoid", pedidos_cliente.SelectedValue);
-
-        //              comando.ExecuteNonQuery();
-
-        //              conexionSql.Close();
-        //          }
-
-        //          MessageBox.Show("Pedido eliminado correctamente.");
-        //          MostrarPedidos();
-        //      }
-        //      catch (Exception ex)
-        //      {
-        //          MessageBox.Show("Seleccione el pedido que desea eliminar!");
-        //      }
-
-        //  }
 
 
         private void btn_borrarPedido_Click(object sender, RoutedEventArgs e) 
@@ -303,7 +282,8 @@ namespace primer_wpf.Views
 
         private void btnReactivarCliente_Click(object sender, RoutedEventArgs e)
         {
-
+            ReactivarCliente reactivarCliente = new ReactivarCliente(conexionSql);
+            reactivarCliente.ShowDialog(); // Muestra la nueva ventana de reactivar cliente
         }
     }
 }
