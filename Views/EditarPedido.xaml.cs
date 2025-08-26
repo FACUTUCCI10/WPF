@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Linq;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -35,94 +36,79 @@ namespace primer_wpf.Views
             CargarPedido();
         }
 
+        public EditarPedido(LinqClassDataContext dataContext,int id)
+        {
+            this.dataContext = dataContext;
+            InitializeComponent();
+            this.id = id;
+            CargarPedido();
+        }
+
+        SqlConnection conexionSql;
+        LinqClassDataContext dataContext;
+
+       
         private void btn_aceptar_edicion_Click(object sender, RoutedEventArgs e)
         {
-            
-
+            //metodo nuevo de insercción con linq
             try
             {
-                if (conexionSql.State != ConnectionState.Open)
-                {
-                    conexionSql.Open();
-                }
 
-                string consulta = "UPDATE PEDIDO SET COD_CLIENTE = @COD_CLIENTE, FECHA_PEDIDO = @FECHA_PEDIDO, FORMA_PAGO = @FORMA_PAGO  WHERE ID = " + id;
+               Pedido pedido = new Pedido();
                
-                SqlCommand comando = new SqlCommand(consulta, conexionSql);
-                 
-                conexionSql.Open();
-                
-                comando.Parameters.AddWithValue("Id",id);
-                comando.Parameters.AddWithValue("@COD_CLIENTE", txt_cod_cliente.Text.ToUpper());
-                comando.Parameters.AddWithValue("@FECHA_PEDIDO", dp_fecha_pedido_edit.SelectedDate.Value);
-                comando.Parameters.AddWithValue("@FORMA_PAGO", cb_forma_pago_edit.Text.ToUpper());
-
-                comando.ExecuteNonQuery();
-
-                MessageBoxResult result = MessageBox.Show(
-                "Pedido modificado correctamente.\n¿Desea modificar otro pedido?",
-                 "Confirmación",
-                  MessageBoxButton.YesNo,
-                 MessageBoxImage.Question
-                );
-
-                if (result == MessageBoxResult.No)
+                if (!int.TryParse(txt_cod_cliente.Text, out int codCliente))
                 {
-                    // Cierro la ventana porque no quiere agregar más
-                    this.Close();
+                    MessageBox.Show("El código de cliente debe ser un número entero válido.");
+                    return;
                 }
-                else
-                {
-                    // Limpio los campos para cargar otro
-                    txt_cod_cliente.Clear();
-                    dp_fecha_pedido_edit.SelectedDate = null;
-                    cb_forma_pago_edit.SelectedIndex = -1;
-                }
+
+                pedido.cod_cliente = codCliente;
+                pedido.forma_pago = cb_forma_pago_edit.Text;
+                pedido.fecha_pedido = dp_fecha_pedido_edit.SelectedDate.Value;
+
+                dataContext.Pedido.InsertOnSubmit(pedido);
+
+                dataContext.SubmitChanges();
+
+                this.Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error al agregar el pedido: " + ex.Message);
-            } 
+            }
         }
         private void CargarPedido()
         {
+            //metodo actualizado con linq
             try
             {
-                string consulta = "SELECT COD_CLIENTE, FECHA_PEDIDO, FORMA_PAGO FROM PEDIDO WHERE Id = @Id";
-               
-                SqlCommand comando = new SqlCommand(consulta, conexionSql);
-                
-                comando.Parameters.AddWithValue("@Id", id);
+                var pedido = dataContext.Pedido.FirstOrDefault(p => p.Id == id);
 
-                conexionSql.Open();
-               
-                SqlDataReader lector = comando.ExecuteReader();
-
-                if (lector.Read())
+                if (pedido != null)
                 {
-                    txt_cod_cliente.Text = lector["COD_CLIENTE"].ToString();
+                    txt_cod_cliente.Text = pedido.cod_cliente.ToString();
 
-                    if (lector["FECHA_PEDIDO"] != DBNull.Value)
-                        dp_fecha_pedido_edit.SelectedDate = Convert.ToDateTime(lector["FECHA_PEDIDO"]);
+                    if (pedido.fecha_pedido != null)
+                        dp_fecha_pedido_edit.SelectedDate = pedido.fecha_pedido;
 
-                    cb_forma_pago_edit.Text = lector["FORMA_PAGO"].ToString();
+                    cb_forma_pago_edit.Text = pedido.forma_pago;
                 }
-
-                lector.Close();
-                conexionSql.Close();
+                else
+                {
+                    MessageBox.Show("No se encontró el pedido con el ID especificado.");
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error al cargar el pedido: " + ex.Message);
-                conexionSql.Close();
             }
-        }
 
+
+        }
 
         private void btn_cancelar_edicion_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
-        SqlConnection conexionSql;
     }
 }

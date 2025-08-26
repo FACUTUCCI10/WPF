@@ -35,86 +35,82 @@ namespace primer_wpf.Views
             CargarCliente();
         }
 
-        SqlConnection conexionSql;
+        public EditarCliente(LinqClassDataContext dataContext, int id)
+        {
+            InitializeComponent();
+            this.dataContext = dataContext;
+            this.id = id;
+            CargarCliente();
+        }
 
+        SqlConnection conexionSql;
+        LinqClassDataContext dataContext;
+       
         private void btn_aceptar_click(object sender, RoutedEventArgs e)
         {
+            //metodo nuevo de insercción con linq
             try
             {
-                // Abrir solo si está cerrada
-                if (conexionSql.State != ConnectionState.Open)
+                Cliente cliente = new Cliente();
+
+                cliente = dataContext.Cliente.FirstOrDefault(c => c.Id == id);
+
+                if (cliente == null) {
+                    MessageBox.Show("No se encontró el cliente con el ID especificado.");
+                    return;
+                }
+                else
                 {
-                    conexionSql.Open();
+                    cliente.nombre = txt_nombre.Text;
+                    cliente.apellido = txt_apellido.Text;
+                    cliente.poblacion = txt_poblacion.Text;
+                    cliente.telefono = txt_telefono.Text;
+                    cliente.direccion = txt_direccion.Text;
+                    if (!int.TryParse(txt_cod_cliente.Text, out int codCliente))
+                    {
+                        MessageBox.Show("El código de cliente debe ser un número entero válido.");
+                        return;
+                    }
+                    cliente.cod_cliente = codCliente;
+                    dataContext.SubmitChanges();
+                    MessageBox.Show("Cliente Modificado correctamente");
                 }
 
-                string consulta = "UPDATE CLIENTE SET NOMBRE = @NOMBRE, APELLIDO = @APELLIDO, POBLACION = @POBLACION, TELEFONO = @TELEFONO, DIRECCION = @DIRECCION, COD_CLIENTE = @COD_CLIENTE WHERE ID = " + id;
-
-                SqlCommand comando = new SqlCommand(consulta, conexionSql);
-
-               // conexionSql.Open();
-
-                comando.Parameters.AddWithValue("@NOMBRE", txt_nombre.Text);
-                comando.Parameters.AddWithValue("@APELLIDO", txt_apellido.Text);
-                comando.Parameters.AddWithValue("@POBLACION", txt_poblacion.Text);
-                comando.Parameters.AddWithValue("@TELEFONO", txt_telefono.Text);
-                comando.Parameters.AddWithValue("@DIRECCION", txt_direccion.Text);
-                comando.Parameters.AddWithValue("@COD_CLIENTE", txt_cod_cliente.Text);
-
-
-                comando.ExecuteNonQuery();
-
-                conexionSql.Close();
-
-
-                MessageBox.Show("Cliente Modificado correctamente");
-
-                this.Close();
-
-                //txt_nombre.Clear();
-                //txt_apellido.Clear();
-                //txt_poblacion.Clear();
-                //txt_telefono.Clear();
-                //txt_direccion.Clear();
-                //txt_cod_cliente.Clear();
-
+                    this.Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error al Modificar registro de cliente: " + ex.Message);
             }
         }
-
+       
         private void CargarCliente()
         {
+            // Cargar los datos del cliente desde la base de datos utilizando LINQ
             try
             {
-                string consulta = "SELECT * FROM CLIENTE WHERE ID = @Id";
-                
-                SqlCommand comando = new SqlCommand(consulta, conexionSql);
-               
-                comando.Parameters.AddWithValue("@Id", id);
-                
-                conexionSql.Open();
-               
-                SqlDataReader reader = comando.ExecuteReader();
-                
-                if (reader.Read())
+                var cliente = dataContext.Cliente.FirstOrDefault(c => c.Id == id);
+
+                if (cliente != null)
                 {
-                    txt_nombre.Text = reader["NOMBRE"].ToString();
-                    txt_apellido.Text = reader["APELLIDO"].ToString();
-                    txt_poblacion.Text = reader["POBLACION"].ToString();
-                    txt_telefono.Text = reader["TELEFONO"].ToString();
-                    txt_direccion.Text = reader["DIRECCION"].ToString();
-                    txt_cod_cliente.Text = reader["COD_CLIENTE"].ToString();
+                    txt_nombre.Text = cliente.nombre;
+                    txt_apellido.Text = cliente.nombre;
+                    txt_poblacion.Text = cliente.poblacion;
+                    txt_telefono.Text = cliente.telefono;
+                    txt_direccion.Text = cliente.direccion;
+                    txt_cod_cliente.Text = cliente.cod_cliente.ToString();
                 }
-               
-                conexionSql.Close();
+                else
+                {
+                    MessageBox.Show("No se encontró el cliente con el ID especificado.");
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error al cargar el cliente: " + ex.Message);
             }
         }
+
 
         private void btn_Cancelar_Click(object sender, RoutedEventArgs e)
         {

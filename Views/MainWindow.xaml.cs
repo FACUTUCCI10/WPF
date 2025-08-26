@@ -16,6 +16,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Data;
 using System.Windows.Controls.Primitives;
+using System.Data.Linq;
 
 
 namespace primer_wpf.Views
@@ -36,7 +37,7 @@ namespace primer_wpf.Views
 
             conexionSql = new SqlConnection(Miconexion);
             
-            dataContext =  new LinqClassDataContext(Miconexion);
+            datos =  new LinqClassDataContext(Miconexion);
           
 
             MostrarClientes();
@@ -47,39 +48,16 @@ namespace primer_wpf.Views
         
         //esto es un objeto de la clase SqlConnection que sirve para conectar a la base de datos con la cadena como parametro
         SqlConnection conexionSql;
-        LinqClassDataContext dataContext;
-      
+        LinqClassDataContext datos;
         
-        //private void MostrarClientes()
-        //{
-        //    try
-        //    {
-        //        string consulta = "SELECT *, CONCAT(NOMBRE, ' ', APELLIDO, ' - ', POBLACION, ' - ', TELEFONO,' - ',DIRECCION,' - ',COD_CLIENTE) AS DescripcionCompleta FROM Cliente where Activo = 1";
-
-        //        SqlDataAdapter adaptador = new SqlDataAdapter(consulta, conexionSql);
-
-        //        using (adaptador)
-        //        {
-        //            DataTable ClientesTabla = new DataTable();
-        //            adaptador.Fill(ClientesTabla);
-
-        //            dataGridClientes.DisplayMemberPath = "DescripcionCompleta";
-        //            dataGridClientes.SelectedValuePath = "Id";
-        //            dataGridClientes.ItemsSource = ClientesTabla.DefaultView;
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        MessageBox.Show(e.ToString());
-        //    }
-        //}
-
+        
+        
         private void MostrarClientes()
         {
             //Mostrar los clientes con linq (reduccion de codigo)
             try
             {
-                var clientesActivos = dataContext.Cliente.Where(c => c.Activo).ToList();
+                var clientesActivos = datos.Cliente.Where(c => c.Activo).ToList();
                 dataGridClientes.ItemsSource = clientesActivos;
 
             }
@@ -91,45 +69,38 @@ namespace primer_wpf.Views
 
         private void MostrarPedidos()
         {
-            
             try
             {
-                //string consulta = "SELECT *, CONCAT ('COD:',cod_cliente,'fECHA DE PEDIDO:',' /',fecha_pedido,'FORMA DE PAGO:',' /', forma_pago) AS INFO from pedido";
 
-                //consulta parametrizada que muestra los pedidos de un cliente seleccionado en la lista de clientes
+                var clienteSeleccionado = dataGridClientes.SelectedValue as Cliente;
 
-                string consulta = "SELECT P.Id, P.cod_cliente, P.forma_pago, P.fecha_pedido, " +
-                  "CONCAT('Pedido #', P.Id, ' | Cliente: ', P.cod_cliente, ' | Fecha: ', FORMAT(P.fecha_pedido, 'yyyy-MM-dd'), ' | Pago: ', P.forma_pago) AS detalleCompleto " +
-                  "FROM PEDIDO P INNER JOIN CLIENTE C ON P.cod_cliente = C.cod_cliente " +
-                  "WHERE C.Id = @ClienteId"; ;
-
-                SqlCommand comando = new SqlCommand(consulta, conexionSql);
-
-                SqlDataAdapter adaptador = new SqlDataAdapter(comando);
-
-                using (comando)
+                if (clienteSeleccionado == null)
                 {
-                    comando.Parameters.AddWithValue("@ClienteId", dataGridClientes.SelectedValue);
-                    DataTable PedidosTabla = new DataTable();
-
-                    adaptador.Fill(PedidosTabla);
-
-                    dataGridPedidos.DisplayMemberPath = "detalleCompleto";
-                    dataGridPedidos.SelectedValuePath = "Id";
-                    dataGridPedidos.ItemsSource = PedidosTabla.DefaultView;
-
+                    MessageBox.Show("Seleccione un cliente.");
+                    return;
                 }
+
+                var pedidos = (from c in datos.Cliente
+                               join p in datos.Pedido on c.cod_cliente equals p.cod_cliente
+                               where c.Id == clienteSeleccionado.Id 
+                               select new
+                               {
+                                   p.Id,
+                                   p.forma_pago,
+                                   p.fecha_pedido,
+                                   p.cod_cliente,
+                                   detalleCompleto = $"Pedido #{p.Id} | Cliente: {p.cod_cliente} | Fecha: {p.fecha_pedido:yyyy-MM-dd} | Pago: {p.forma_pago}"
+                               }).ToList();
+
+                dataGridPedidos.ItemsSource = pedidos;
+                dataGridPedidos.DisplayMemberPath = "detalleCompleto";
+                dataGridPedidos.SelectedValuePath = "Id";
             }
-
-            catch (Exception e)
+            catch (Exception ex)
             {
-                {
-                    MessageBox.Show(e.ToString());
-                }
-
+                MessageBox.Show("Error al mostrar pedidos: " + ex.Message);
             }
         }
-
 
 
 
@@ -137,20 +108,10 @@ namespace primer_wpf.Views
         {
 
         }
-
-        //private void btn_InsertarCliente_Click(object sender, RoutedEventArgs e)
-        //{
-        //    AgregarCliente nuevaVentana = new AgregarCliente(conexionSql);
-        //    nuevaVentana.ShowDialog();       // Muestra la nueva ventana  
-
-        //    MostrarClientes();
-
-        //}
-
         private void btn_InsertarCliente_Click(object sender, RoutedEventArgs e)
         {
-            AgregarCliente nuevaVentana = new AgregarCliente(dataContext);
-            nuevaVentana.ShowDialog();       // Muestra la nueva ventana  
+            AgregarCliente nuevaVentana = new AgregarCliente(datos);
+            nuevaVentana.ShowDialog();      
 
             MostrarClientes();
 
@@ -170,109 +131,87 @@ namespace primer_wpf.Views
               
         }
 
-
         private void btn_Eliminar_cliente_Click(object sender, RoutedEventArgs e)
         {
             try
             {
+                
+                var clienteSeleccionado = dataGridClientes.SelectedValue as Cliente;
 
-                string consulta = "UPDATE Cliente SET ACTIVO = 0 WHERE Id = @clienteid";
+                if (clienteSeleccionado == null)
+                {
+                    MessageBox.Show("Seleccione el Cliente que desea Desactivar!");
+                    return;
+                }
 
-                SqlCommand comando = new SqlCommand(consulta, conexionSql);
+                using (var contexto = new LinqClassDataContext(conexionSql)) 
+                {
+                    var cliente = contexto.Cliente.FirstOrDefault(c => c.Id == clienteSeleccionado.Id);
 
+                    if (cliente != null)
+                    {
+                        cliente.Activo = false;
+                        contexto.SubmitChanges();
 
-                conexionSql.Open();
+                        MessageBox.Show("Cliente Desactivado correctamente.");
+                    }
+                    else
+                    {
+                        MessageBox.Show("No se encontró el cliente en la base de datos.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ocurrió un error al eliminar el cliente.");
+            }
+        }
 
-                comando.Parameters.AddWithValue("@clienteid", dataGridClientes.SelectedValue);
+        private void btn_borrarPedido_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var pedidoSeleccionado = dataGridPedidos.SelectedValue as Pedido;
 
-                comando.ExecuteNonQuery();
+                if (pedidoSeleccionado == null)
+                {
+                    MessageBox.Show("Seleccione el pedido que desea Desactivar!");
+                    return;
+                }
+                var contexto = new LinqClassDataContext(conexionSql);
 
-                conexionSql.Close();
-
-                MessageBox.Show("Cliente eliminado correctamente.");
-
+                var pedido = contexto.Pedido.FirstOrDefault(p => p.Id == pedidoSeleccionado.Id);
+               
+                if (pedido != null)
+                {
+                    pedido.Activo = false;
+                    contexto.SubmitChanges();
+                    
+                    MessageBox.Show("Pedido Desactivado correctamente.");
+                    
+                    MostrarPedidos();
+                }
+                else
+                {
+                    MessageBox.Show("No se encontró el pedido en la base de datos.");
+                }
             }
 
             catch (Exception ex)
             {
-                MessageBox.Show("Seleccione el Cliente que desea eliminar!");
+                MessageBox.Show("Seleccione el pedido que desea eliminar!");
             }
         }
-        //private void btn_Eliminar_cliente_Click(object sender, RoutedEventArgs e)
-        //{
-        //    try
-        //    {
-        //        // Asegurate de que el DataGrid tenga el objeto Cliente como SelectedItem
-        //        var clienteSeleccionado = dataGridClientes.SelectedValue as Cliente;
 
-        //        if (clienteSeleccionado == null)
-        //        {
-        //            MessageBox.Show("Seleccione el Cliente que desea eliminar!");
-        //            return;
-        //        }
-
-        //        using (var contexto = new TuDbContext()) // Reemplazá con el nombre real de tu DbContext
-        //        {
-        //            var cliente = contexto.Clientes.FirstOrDefault(c => c.Id == clienteSeleccionado.Id);
-
-        //            if (cliente != null)
-        //            {
-        //                cliente.Activo = false;
-        //                contexto.SaveChanges();
-
-        //                MessageBox.Show("Cliente Desactivado correctamente.");
-        //            }
-        //            else
-        //            {
-        //                MessageBox.Show("No se encontró el cliente en la base de datos.");
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show("Ocurrió un error al eliminar el cliente.");
-        //    }
-       // }
-
-
-
-
-        private void btn_borrarPedido_Click(object sender, RoutedEventArgs e) 
-        { 
-            try 
-            { 
-                              
-                string consulta = "DELETE FROM pedido WHERE Id = @Pedidoid"; 
-                
-                SqlCommand comando = new SqlCommand(consulta, conexionSql); 
-                
-                conexionSql.Open(); 
-                
-                comando.Parameters.AddWithValue("@Pedidoid", dataGridClientes.SelectedValue);
-                
-                comando.ExecuteNonQuery(); 
-                
-                conexionSql.Close(); MostrarPedidos(); 
-
-            } 
-
-            catch (Exception ex) 
-            {
-                
-                
-                MessageBox.Show("Seleccione el pedido que desea eliminar!"); 
-            } 
-        }
 
 
         private void btn_Insertar_pedido_Click(object sender, RoutedEventArgs e)
         {
            AgregarPedido agregarPedido = new AgregarPedido(conexionSql);
-            agregarPedido.ShowDialog(); // Muestra la nueva ventana de agregar pedido
+            agregarPedido.ShowDialog();
 
             MostrarPedidos();
-        }
-
+        }      
         private void btn_EditarPedido_Click(object sender, RoutedEventArgs e)
         {
             if (dataGridClientes.SelectedValue == null)
@@ -281,31 +220,19 @@ namespace primer_wpf.Views
                 return;
             }
 
-                int pedidoId = (int)dataGridClientes.SelectedValue;
-
-                EditarPedido editarPedido = new EditarPedido(conexionSql, pedidoId);
-                editarPedido.ShowDialog(); // Muestra la nueva ventana de editar pedido
-            
+            EditarPedido editarPedido = new EditarPedido(datos,(int)dataGridPedidos.SelectedValue);
+            editarPedido.ShowDialog();
         }
-
         private void btn_EditarCliente_Click(object sender, RoutedEventArgs e)
         {
-            EditarCliente editarCliente = new EditarCliente(conexionSql, (int)dataGridClientes.SelectedValue);
+            EditarCliente editarCliente = new EditarCliente(datos,(int)dataGridClientes.SelectedValue);  
             editarCliente.ShowDialog();
 
         }
-       
 
         private void Window_Activated(object sender, EventArgs e)
         {
             MostrarClientes();
-        }
-
-        private void btn_data_Click(object sender, RoutedEventArgs e)
-        {
-            Data data = new Data(conexionSql);
-            data.ShowDialog(); 
-
         }
 
         private void dataGridClientes_SelectionChanged(object sender, SelectionChangedEventArgs e)
