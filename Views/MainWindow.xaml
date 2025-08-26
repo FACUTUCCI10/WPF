@@ -105,12 +105,13 @@
                           AutoGenerateColumns="False"
                           SelectionMode="Single"
                           SelectionUnit="FullRow"
+                          SelectedValuePath="Id"
                           SelectionChanged="dataGridPedidos_SelectionChanged">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="18"/>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="22"/>
                         <DataGridTextColumn Header="Forma de Pago" Binding="{Binding forma_pago}" Width="*"/>
                         <DataGridTextColumn Header="Fecha" Binding="{Binding fecha_pedido}" Width="*"/>
-                        <!-- Agregá más columnas si tu modelo lo requiere -->
+                        <DataGridTextColumn Header="Estado" Binding="{Binding Activo}" Width="23"/>
                     </DataGrid.Columns>
                 </DataGrid>
 

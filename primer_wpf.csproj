@@ -64,9 +64,6 @@
     </Compile>
     <Compile Include="Models\Cliente.cs" />
     <Compile Include="Models\Pedido.cs" />
-    <Compile Include="Views\Data.xaml.cs">
-      <DependentUpon>Data.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\EditarCliente.xaml.cs">
       <DependentUpon>EditarCliente.xaml</DependentUpon>
     </Compile>
@@ -90,10 +87,6 @@
     <Compile Include="Views\ReactivarCliente.xaml.cs">
       <DependentUpon>ReactivarCliente.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\Data.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\EditarCliente.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
